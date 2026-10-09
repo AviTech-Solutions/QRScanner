@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="XCode - AviTech Solutions">
+  <meta name="creator" content="XCode">
+  <meta name="publisher" content="AviTech Solutions">
+  <meta name="description" content="Scan QR codes and supported barcodes privately in your browser using your camera or images.">
+  <meta name="contact" content="info@avitechsoltions.site">
+  <meta name="email" content="info@avitechsoltions.site">
+  <meta name="telephone" content="+256708992203">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="QR Scanner">
+  <meta property="og:title" content="QR Scanner — Scan codes privately">
+  <meta property="og:description" content="Scan QR codes and supported barcodes privately in your browser using your camera or images.">
+  <meta property="og:image" content="assets/icons/logo.png">
+  <meta property="og:type" content="website">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="QR Scanner — Scan codes privately">
+  <meta name="twitter:description" content="Scan QR codes and supported barcodes privately in your browser using your camera or images.">
+  <title>QR Scanner — Scan codes privately</title>
+  <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <script defer src="assets/js/vendor/html5-qrcode.min.js"></script>
+  <script defer src="assets/js/vendor/JsBarcode.all.min.js"></script>
+  <script defer src="assets/js/app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="QR Scanner home"><img src="assets/icons/logo.png" alt="" width="44" height="44"><span>QR<span class="brand-accent"> Scanner</span></span></a>
+    <div id="cameraBadge" class="camera-badge" hidden><span class="live-dot"></span> Camera active</div>
+  </header>
+
+  <main class="app-shell">
+    <section class="intro">
+      <p class="eyebrow">FAST · PRIVATE · FREE</p>
+      <h1>Scan QR Codes &amp; Barcodes</h1>
+      <p class="intro-copy">Scan with your camera or upload images to decode instantly.</p>
+    </section>
+
+    <nav class="mode-tabs" role="tablist" aria-label="Choose a scanning method">
+      <button class="mode-tab is-selected" id="cameraTab" type="button" role="tab" aria-selected="true" aria-controls="cameraPanel" title="Camera Scanner">
+        <i class="bi bi-camera" aria-hidden="true"></i>
+        <span>Camera Scanner</span>
+      </button>
+      <button class="mode-tab" id="uploadTab" type="button" role="tab" aria-selected="false" aria-controls="uploadPanel" title="Upload Images">
+        <i class="bi bi-upload" aria-hidden="true"></i>
+        <span>Upload Images</span>
+      </button>
+    </nav>
+
+    <div class="work-grid">
+      <section class="scan-card" aria-label="Scanner">
+        <div id="cameraPanel" class="tab-panel" role="tabpanel" aria-labelledby="cameraTab">
+          <div class="panel-heading">
+            <div>
+              <h2>Camera scanner</h2>
+              <p>Point your camera at a QR code or barcode.</p>
+            </div>
+          </div>
+
+          <div class="camera-stage" id="cameraStage">
+            <div id="reader" aria-label="Live camera preview"></div>
+            <div class="camera-placeholder" id="cameraPlaceholder">
+              <div class="camera-icon" aria-hidden="true">
+                <i class="bi bi-camera camera-icon" aria-hidden="true"></i>
+              </div>
+              <strong>Your camera preview appears here</strong>
+              <span>Camera permission is requested only when you start scanning.</span>
+            </div>
+          </div>
+
+          <div class="camera-options">
+            <label class="select-label" for="cameraSelect">Camera</label>
+            <select id="cameraSelect" aria-label="Select camera" disabled><option value="">Choose a camera</option></select>
+            <button id="torchButton" class="button button-quiet" type="button" disabled aria-pressed="false" title="Toggle flashlight">Flashlight</button>
+          </div>
+
+          <div class="button-row camera-buttons">
+            <button id="startButton" class="button button-primary" type="button">Start scan</button>
+            <button id="stopButton" class="button button-secondary" type="button" disabled>Stop scan</button>
+            <button id="scanAgainButton" class="button button-secondary" type="button">Scan again</button>
+          </div>
+        </div>
+
+        <div id="uploadPanel" class="tab-panel" role="tabpanel" aria-labelledby="uploadTab" hidden>
+          <div class="panel-heading">
+            <div>
+              <h2>Upload images</h2>
+              <p>Decode image files on this device. Files are not uploaded.</p>
+            </div>
+            <span class="privacy-pill">On-device</span>
+          </div>
+
+          <input id="fileInput" type="file" accept="image/png,image/jpeg,image/webp,.jpg,.jpeg,.png,.webp" multiple hidden>
+          <div id="dropZone" class="drop-zone" role="group" tabindex="0" aria-label="Choose or drop image files">
+            <i class="bi bi-upload upload-icon" aria-hidden="true"></i>
+            <strong>Upload or Drop Files Here</strong>
+            <span>Drag images here, or browse your device.</span>
+            <button id="chooseFilesButton" class="button button-primary" type="button">Choose files</button>
+            <small>PNG, JPG, JPEG, WebP · Up to 15 MB per image</small>
+          </div>
+
+          <div class="queue-toolbar">
+            <div>
+              <h3>File queue <span id="queueCount" class="count">0</span></h3>
+              <p id="batchProgress" class="batch-progress" aria-live="polite">Add images to get started.</p>
+            </div>
+            <button id="clearQueueButton" class="text-button" type="button" disabled>Clear queue</button>
+          </div>
+          
+          <div id="fileQueue" class="file-queue" aria-live="polite"></div>
+          <div class="button-row batch-buttons">
+            <button id="scanAllButton" class="button button-primary" type="button" disabled>Scan all</button>
+            <button id="cancelBatchButton" class="button button-secondary" type="button" disabled>Cancel processing</button>
+            <button id="retryButton" class="button button-secondary" type="button" disabled>Retry failed</button>
+          </div>
+          <p id="uploadStatus" class="status-message" role="status" aria-live="polite">Choose one or more images containing codes.</p>
+        </div>
+      </section>
+
+      <section class="results-card" aria-labelledby="resultsHeading">
+        <div class="results-header">
+          <div>
+            <h2 id="resultsHeading">Scan results <span id="resultCount" class="count">0</span></h2>
+          </div>
+          
+          <div class="export-actions">
+            <button id="exportTxtButton" class="text-button" type="button" disabled>Export TXT</button>
+            <button id="exportCsvButton" class="text-button" type="button" disabled>Export CSV</button>
+          </div>
+        </div>
+        <div id="emptyResults" class="empty-results">
+          <i class="bi bi-grid-3x3-gap empty-icon" aria-hidden="true"></i>
+          <strong>Your results will appear here</strong>
+          <p>Scan with your camera or upload an image to see decoded content.</p>
+        </div>
+        <div id="resultsList" class="results-list" aria-live="polite"></div>
+        <div class="results-footer"><span>Results are kept only for this page session.</span><button id="clearResultsButton" class="text-button text-danger" type="button" disabled>Clear all</button></div>
+      </section>
+    </div>
+
+    <div id="image-reader" class="visually-hidden" aria-hidden="true"></div>
+  </main>
+  <section id="cookieNotice" class="cookie-notice" aria-label="Cookie and storage notice" hidden>
+    <div class="cookie-copy">
+      <strong>Privacy matters</strong>
+      <p>QR Scanner doesn’t use analytics or advertising cookies. We use browser storage only to remember that you dismissed this notice.</p>
+      <details><summary>About this storage</summary><p>Your scan results stay in memory for this page session. Dismissing this notice saves a small preference in this browser; it can be cleared in your browser settings.</p></details>
+    </div>
+    <button id="dismissCookieNotice" class="button button-primary" type="button">Got it</button>
+  </section>
+  <footer class="footer">
+    <span>
+      © <small id="year"></small> AviTech Solutions. All rights reserved. <br>
+      Developed & Managed by <a href="https://www.avitechsolutions.site">AviTech Solutions</a>
+    </span>
+  </footer>
+  <script src="/assets/js/vendor/bootstrap.bundle.min.js"></script>
+</body>
+</html>
